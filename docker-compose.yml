@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+      MYSQL_USER: username
+      MYSQL_PASSWORD: password
+    ports:
+      - 3306:3306
+    volumes:
+      - db-data:/var/lib/mysql
+
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+      - ./mon-site:/var/www/html
+    depends_on:
+      - db
+
+  web:
+    image: nginx:alpine
+    volumes:
+      - "./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf"
+      - "./mon-site/public:/var/www/html/public"
+    ports:
+      - "8080:80"
+    depends_on:
+      - app
+      - db
+
+volumes:
+  db-data: {}
