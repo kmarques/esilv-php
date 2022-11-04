@@ -1,15 +1,16 @@
 <?php
 
-// variables for params
-var_dump($_GET);
-var_dump($_POST);
-var_dump($_REQUEST);
-var_dump($_FILES);
+//<protocol>://<domain>:<port>/<path>?<query_params>#<anchor>
 
-// variables systems
+// variables globales
 echo "<pre>";
-var_dump($_SERVER);
+var_dump($_GET); // => query params
+var_dump($_POST); // => post params
+var_dump($_REQUEST); // => merge query/post
+var_dump($_FILES); // => file temporary paths
+var_dump($_SERVER); // => server infos + request infos
 echo "</pre>";
+
 $theme = [
     "headerClass" => isset($_GET['headerClass']) ? $_GET['headerClass'] : ""
 ];
