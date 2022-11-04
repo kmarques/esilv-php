@@ -1,3 +1,10 @@
+<?php
+$user = [
+    "firstname" => "John",
+    "lastname" => "Doe",
+];
+?>
+
 <header <?= isset($theme['headerClass']) ? 'class="'. $theme['headerClass']. '"' : ''; ?>>
     <nav>
         <div>Portail Intervenants - <?= $user["lastname"]." ".$user['firstname']; ?></div>
