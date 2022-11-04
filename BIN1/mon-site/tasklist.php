@@ -1,50 +1,64 @@
 <?php
-    $user = [
-        "firstname" => "John",
-        "lastname" => "Doe",
-    ];
-    $tasks = [
-        [
-            "title"=> "dormir",
-            "completed"=> true,
-        ],
-        [
-            "title"=> "manger",
-            "completed"=> false
-        ],
-        [
-            "title"=> "travailler",
-            "completed"=> true
-        ]
-    ];
-    ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste de tâches</title>
-</head>
-<body>
-    <header>
-        <h3>Portail intervenants - <?= $user["firstname"] . " " . $user['lastname'] ?></h3>
-        <nav>
-            <ul>
-                <li><a href="index.php">Acceuil</a></li>
-                <li><a href="tasklist.php">Liste de tâches</a></li>
-                <li><a href="exo1.php">Exo 1</a></li>
-            </ul>
-        </nav>
-    </header>
+/**
+ * Structure URL
+ * <protocol>://<hostname>:<port>/<path>?<query_params>#<anchor>
+ * <hostname> = <sub_domain>.<domaine_name>.<extension>
+ * <query_params> = <param_name>=<param_value>&<param_name>=<param_value>
+ */
+
+var_dump($_GET);
+$user = [
+    "firstname" => "John",
+    "lastname" => "Doe",
+];
+$tasks = [
+    [
+        "title"=> "dormir",
+        "completed"=> true,
+    ],
+    [
+        "title"=> "manger",
+        "completed"=> false
+    ],
+    [
+        "title"=> "travailler",
+        "completed"=> true
+    ]
+];
+$pageTitle = "Liste de tâches";
+$filterCompleted = $_GET['status'] === 'completed';
+?>
+<?php
+require_once('./includes/start_html.php');
+require_once('./includes/header.php');
+?>
     <main>
-        <h1>Liste de tâches</h1>
+        <h1>Liste de tâches filtered</h1>
         <ul>
             <?php foreach($tasks as $task) : ?>
-                <li <?= $task['completed'] ? 'style="text-decoration: line-through;"' : '' ?>><?= $task['title'] ?></li>
+                <?php if ($task['completed'] === $filterCompleted): ?>
+                    <?php require('./includes/task/taskItem.php'); ?>
+               <?php endif; ?>
             <?php endforeach; ?>
         </ul>
+        <h1>Liste de tâches Not completed</h1>
+        <ul>
+            <?php foreach($tasks as $task) : ?>
+                <?php if (!$task['completed']): ?>
+                    <?php require('./includes/task/taskItem.php'); ?>
+               <?php endif; ?>
+            <?php endforeach; ?>
+        </ul>
+        <h1>Liste de tâches completed</h1>
+        <ul>
+            <?php foreach($tasks as $task) {
+                if ($task['completed']) {
+                    require('./includes/task/taskItem.php');
+                }
+            } ?>
+        </ul>
     </main>
-    <footer>ALV Online - <?= date('Y'); ?> © Léonard de Vinci</footer>
-</body>
-</html>
+    <?php
+    require_once('./includes/footer.php');
+require_once('./includes/end_html.php');
+?>
