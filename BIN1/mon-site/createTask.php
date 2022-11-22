@@ -8,6 +8,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         'title' => $_POST['title'],
         'completed' => isset($_POST['completed'])
     ];
+    require_once('./lib/db.php');
+    $stmt = $db->prepare('INSERT INTO task (title, completed) VALUES (:title, :completed)');
+    $result = $stmt->execute($task);
 } else {
     $task = null;
 }
@@ -23,11 +26,11 @@ require_once('./includes/header.php');
             <input name="completed" type="checkbox"/>
             <input type="submit" value="Create"/>
         </form>
-        <?php if($task !== null): ?>
+        <?php if(isset($result) && $result): ?>
             Task bien créée
         <?php endif; ?>
     </main>
     <?php
-    require_once('./includes/footer.php');
+require_once('./includes/footer.php');
 require_once('./includes/end_html.php');
 ?>

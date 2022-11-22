@@ -1,35 +1,28 @@
 <?php
+
+require_once('./lib/db.php');
 /**
  * Structure URL
  * <protocol>://<hostname>:<port>/<path>?<query_params>#<anchor>
  * <hostname> = <sub_domain>.<domaine_name>.<extension>
  * <query_params> = <param_name>=<param_value>&<param_name>=<param_value>
  */
-echo "<pre>";
-var_dump($_GET);
-var_dump($_POST);
-var_dump($_REQUEST);
-var_dump($_SERVER);
-echo "</pre>";
+//echo "<pre>";
+//var_dump($_GET);
+//var_dump($_POST);
+//var_dump($_REQUEST);
+//var_dump($_SERVER);
+//echo "</pre>";
 
 $user = [
     "firstname" => "John",
     "lastname" => "Doe",
 ];
-$tasks = [
-    [
-        "title"=> "dormir",
-        "completed"=> true,
-    ],
-    [
-        "title"=> "manger",
-        "completed"=> false
-    ],
-    [
-        "title"=> "travailler",
-        "completed"=> true
-    ]
-];
+
+$stmt = $db->prepare('SELECT * FROM task');
+$stmt->execute();
+$tasks = $stmt->fetchAll();
+
 $pageTitle = "Liste de tâches";
 
 if(!isset($_GET['status'])) {

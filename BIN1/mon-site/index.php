@@ -1,5 +1,7 @@
 <?php
 
+require_once('./lib/db.php');
+
 echo "Bonjour\n";
 
 $simple = [1, 2, 3, 4, 5];

@@ -3,31 +3,37 @@
 //<protocol>://<domain>:<port>/<path>?<query_params>#<anchor>
 
 // variables globales
-echo "<pre>";
-var_dump($_GET); // => query params
-var_dump($_POST); // => post params
-var_dump($_REQUEST); // => merge query/post
-var_dump($_FILES); // => file temporary paths
-var_dump($_SERVER); // => server infos + request infos
-echo "</pre>";
+//echo "<pre>";
+//var_dump($_GET); // => query params
+//var_dump($_POST); // => post params
+//var_dump($_REQUEST); // => merge query/post
+//var_dump($_FILES); // => file temporary paths
+//var_dump($_SERVER); // => server infos + request infos
+//echo "</pre>";
 
 $theme = [
     "headerClass" => isset($_GET['headerClass']) ? $_GET['headerClass'] : ""
 ];
-$tasks = [
-    [
-        "title" => "dormir",
-        "completed" => true,
-    ],
-    [
-        "title" => "manger",
-        "completed" => false,
-    ],
-    [
-        "title" => "travailler",
-        "completed" => true,
-    ]
-];
+
+require_once('./lib/db.php');
+
+if (
+    // si j'ai pas d'action c'est bon
+    isset($_GET['action'])
+    // sinon si j'ai delete et que task->title !== name (elem cliqué)
+    && $_GET['action']==="delete"
+) {
+    $stmt = $db->prepare('DELETE FROM task WHERE id = :id');
+    var_dump($stmt->execute([
+        'id' => intval($_GET['id'])
+    ]));
+}
+
+
+$stmt = $db->query('SELECT * FROM task');
+$stmt->execute();
+$tasks = $stmt->fetchAll();
+
 $isCompleted = isset($_REQUEST['completed']) ? filter_var($_REQUEST['completed'], FILTER_VALIDATE_BOOLEAN) : null;
 
 require_once "./includes/start_html.php";
@@ -41,8 +47,8 @@ require_once "./includes/header.php";
         <?php require_once './includes/task/taskFilter.php' ?>
         <ul>
             <?php foreach($tasks as $task): ?>
-                <?php if ($isCompleted === null || ($isCompleted === $task['completed'])) : ?>
-                    <?php require "./includes/task/taskitem.php"; ?>
+                <?php if ($isCompleted === null || ($isCompleted == $task['completed'])) : ?>
+                    <?php require "./includes/task/taskitemWithDelete.php"; ?>
                 <?php endif; ?>
             <?php endforeach; ?>
         </ul>
