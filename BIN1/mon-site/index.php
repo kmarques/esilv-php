@@ -1,100 +1,49 @@
 <?php
+session_start();
 
-require_once('./lib/db.php');
-
-echo "Bonjour\n";
-
-$simple = [1, 2, 3, 4, 5];
-
-// Boucle sur tableau itératif
-echo "Boucle sur tableau itératif\n";
-foreach ($simple as $value) {
-    echo $value . "\n";
+if(!isset($_SESSION["coucou"])) {
+    $_SESSION['coucou'] = 3;
+    error_log('set session coucou');
+} else {
+    error_log('session coucou already set');
 }
-//exo1
-$simple = ["dormir", "manger", "travailler"];
-//exo2
-$assoc = [
-    "ex1" => true,
-    "ex2" => false
-];
-$simple = [
-    [
-        "title"=> "dormir",
-        "completed"=> true,
-    ],
-    [
-        "title"=> "manger",
-        "completed"=> false
-    ],
-    [
-        "title"=> "travailler",
-        "completed"=> true
-    ]
-];
-//exo4
-$assoc = [
-    "ex1" => [
-        "completed"=>true,
-        "auteur" => "toto"
-    ],
-    "ex2" => [
-        "completed" => false,
-        "auteur" => "tata"
-    ]
-];
-$simple = [
-    [
-        "title"=> "dormir",
-        "completed"=> true,
-        "auteur" => "toto"
-    ],
-    [
-        "title"=> "manger",
-        "completed"=> false,
-        "auteur" => "toto"
-    ],
-    [
-        "title"=> "travailler",
-        "completed"=> true,
-        "auteur" => "toto"
-    ]
-];
 
-
-
-
-$simple= [
-    [
-        "title" => "dormir",
-        "completed" => true,
-        "auteur" => 'Toto'
-    ],
-    [
-        "title" => "manger",
-        "completed" => false,
-        "auteur" => 'Toto'
-    ],
-    [
-        "title" => "coder",
-        "completed" => false,
-        "auteur" => 'Toto'
-    ],
-];
-$assoc = [
-    'dormir' => [
-        'completed' => true,
-        'auteur' => 'Toto'
-    ],
-    'manger' => [
-        'completed' => false,
-        'auteur' => 'Titi'
-    ],
-];
-$isCompleted = false;
-$filterOwner = "Ta";
-
-echo "Boucle sur tableau associatif\n";
-foreach ($assoc as $key => $value) {
-    echo $key . ' => ' . var_export($value) . "<br/>";
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
+    $credentials = $_POST;
+    if ($credentials['username'] === "demo" && $credentials['password'] === "demo") {
+        $_SESSION['user'] = array_merge(["id" => 1], $credentials);
+    } else {
+        echo "Wrong credentials";
+    }
 }
+
+$isConnected = isset($_SESSION['user']);
+$user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <?php if(!$isConnected) : ?>
+        <form method="POST">
+            <input name="username" value="<?= $_POST['username'] ?? '' ?>"/>
+            <input name="password" value="<?= $_POST['password'] ?? '' ?>"/>
+            <input type="submit" value="Submit"/>
+        </form>
+    <?php else : ?>
+        <h1>Welcome <?= $user["username"] ?></h1>
+        <a href="logout.php">Logout</a>
+    <?php endif; ?>
+</body>
+</html>
+
+
+
+
