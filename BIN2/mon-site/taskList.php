@@ -1,4 +1,14 @@
 <?php
+
+session_start();
+
+if(!isset($_SESSION['alreadyVisited'])) {
+    echo "Unknown visitor";
+} else {
+    echo "Hi again";
+}
+
+
 $user = [
     "firstname" => "John",
     "lastname" => "Doe",

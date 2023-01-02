@@ -2,8 +2,8 @@
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $task = [
-        "title" => $_POST['title'],
-        "completed" => isset($_POST['completed']) && filter_var($_POST['completed'], FILTER_VALIDATE_BOOL)
+    "title" => $_POST['title'],
+    "completed" => isset($_POST['completed']) && filter_var($_POST['completed'], FILTER_VALIDATE_BOOL)
     ];
     require_once('./lib/db.php');
     $stmt = $db->prepare('INSERT INTO task (title, completed) VALUES (:title, :completed)');

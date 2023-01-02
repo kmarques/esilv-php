@@ -21,9 +21,9 @@ $db = new PDO(
 //$rows = $stmt->fetchAll();
 
 // Example prepare
-$stmt = $db->prepare("SELECT * FROM task WHERE title LIKE :title");
-$stmt->execute([
-    'title' => 'd%'
-]);
-$rows = $stmt->fetchAll();
-var_dump($rows);
+//$stmt = $db->prepare("SELECT * FROM task WHERE title LIKE :title");
+//$stmt->execute([
+//    'title' => 'd%'
+//]);
+//$rows = $stmt->fetchAll();
+//var_dump($rows);

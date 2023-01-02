@@ -10,10 +10,37 @@ if(!isset($_SESSION["coucou"])) {
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $credentials = $_POST;
-    if ($credentials['username'] === "demo" && $credentials['password'] === "demo") {
-        $_SESSION['user'] = array_merge(["id" => 1], $credentials);
-    } else {
-        echo "Wrong credentials";
+    $action = $credentials['action'];
+    unset($credentials['action']);
+
+    if($action === "comment") {
+        $comment = $_POST['comment'];
+    }
+    if($action === "register") {
+        require_once('./lib/db.php');
+        $stmt = $db->prepare('INSERT INTO users (username, password) VALUES (:username, :password)');
+        $stmt->execute([
+            "username" => $credentials['username'],
+            "password" => password_hash($credentials['password'], PASSWORD_BCRYPT)
+        ]);
+        echo "User registered";
+    }
+    if($action === "login") {
+        require_once('./lib/db.php');
+        $stmt = $db->prepare('SELECT * FROM users WHERE username = :username');
+        $stmt->execute([
+            "username" => $credentials['username'],
+        ]);
+        $user = $stmt->fetch();
+        if(!$user) {
+            echo "wrong credentials";
+        } else {
+            if (!password_verify($credentials['password'], $user['password'])) {
+                echo "wrong credentials";
+            } else {
+                $_SESSION['user'] = $user;
+            }
+        }
     }
 }
 
@@ -32,13 +59,28 @@ $user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
 </head>
 <body>
     <?php if(!$isConnected) : ?>
+        <h1>Login</h1>
         <form method="POST">
+            <input type="hidden" name="action" value="login"/>
+            <input name="username" value="<?= $_POST['username'] ?? '' ?>"/>
+            <input name="password" value="<?= $_POST['password'] ?? '' ?>"/>
+            <input type="submit" value="Submit"/>
+        </form>
+        <h1>Register</h1>
+        <form method="POST">
+            <input type="hidden" name="action" value="register"/>
             <input name="username" value="<?= $_POST['username'] ?? '' ?>"/>
             <input name="password" value="<?= $_POST['password'] ?? '' ?>"/>
             <input type="submit" value="Submit"/>
         </form>
     <?php else : ?>
         <h1>Welcome <?= $user["username"] ?></h1>
+        <form method="POST">
+            <input type="hidden" name="action" value="comment"/>
+            <input name="comment"/>
+            <input type='submit' value="Send"/>
+        </form>
+        <?= $comment ?? '' ?>
         <a href="logout.php">Logout</a>
     <?php endif; ?>
 </body>

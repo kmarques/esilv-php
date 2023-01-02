@@ -8,6 +8,7 @@ services:
       MYSQL_DATABASE: app
       MYSQL_USER: username
       MYSQL_PASSWORD: password
+      MYSQL_HOST: "%"
     ports:
       - 3306:3306
     volumes:
