@@ -1,1 +1,0 @@
-<li <?= $task['completed'] ? 'style="text-decoration: line-through;"' : '' ?>><?= $task['title'] ?></li>

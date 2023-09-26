@@ -1,19 +1,5 @@
 <?php
 
-$var1 = "Hello";
-$var2 = "World";
-function display (string $message): void {
-    echo $message;
-}
-
-class Toto {
-    public string $name;
-}
-
-echo $var1 . " " . $var2;
-
-
-
 function deletePost(int $postId):bool {
     $role = "user";
 
@@ -26,8 +12,16 @@ function deletePost(int $postId):bool {
     }
 }
 
+echo "<p>Post deleted (If): ";
+if(deletePost(45)) {
+    echo "true";
+} else {
+    echo "false";
+}
+echo "</p>";
+
 function deletePostSwitch(int $postId):bool {
-    $role = "moderator";
+    $role = "admin";
     $decision = null;
     switch($role) {
         case "admin":
@@ -48,23 +42,10 @@ function deletePostSwitch(int $postId):bool {
     return $decision;
 }
 
-function isModeratorValid($role, $postId) {
-    if($role === "moderator" && $postId < 100) {
-        return "moderator";
-    } else {
-        return null;
-    }
+echo "<p>Post deleted (Switch): ";
+if(deletePostSwitch(45)) {
+    echo "true";
+} else {
+    echo "false";
 }
-
-function deletePostMatch(int $postId): bool {
-    $role = "moderator";
-    $decision = match($role) {
-        "admin" => true,
-        isModeratorValid($role, $postId) => true,
-        default => false
-    };
-
-    return $decision;
-}
-
-echo "Post deleted : " . deletePostMatch(100);
+echo "</p>";

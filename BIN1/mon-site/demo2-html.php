@@ -1,19 +1,4 @@
 <?php
-
-$var1 = "Hello";
-$var2 = "World";
-function display (string $message): void {
-    echo $message;
-}
-
-class Toto {
-    public string $name;
-}
-
-echo $var1 . " " . $var2;
-
-
-
 function deletePost(int $postId):bool {
     $role = "user";
 
@@ -27,7 +12,7 @@ function deletePost(int $postId):bool {
 }
 
 function deletePostSwitch(int $postId):bool {
-    $role = "moderator";
+    $role = "admin";
     $decision = null;
     switch($role) {
         case "admin":
@@ -47,24 +32,26 @@ function deletePostSwitch(int $postId):bool {
 
     return $decision;
 }
-
-function isModeratorValid($role, $postId) {
-    if($role === "moderator" && $postId < 100) {
-        return "moderator";
-    } else {
-        return null;
-    }
-}
-
-function deletePostMatch(int $postId): bool {
-    $role = "moderator";
-    $decision = match($role) {
-        "admin" => true,
-        isModeratorValid($role, $postId) => true,
-        default => false
-    };
-
-    return $decision;
-}
-
-echo "Post deleted : " . deletePostMatch(100);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>Post deleted (If) : <?php if (deletePost(45)) : ?>
+        true
+        <?php else: ?>
+            false
+        <?php endif; ?>
+    </p>
+    <p>Post deleted (Switch) : <?php if (deletePostSwitch(45)) : ?>
+        true
+        <?php else: ?>
+            false
+        <?php endif; ?>
+    </p>
+</body>
+</html>
