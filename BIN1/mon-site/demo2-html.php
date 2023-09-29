@@ -1,4 +1,5 @@
 <?php
+
 function deletePost(int $postId):bool {
     $role = "user";
 
@@ -24,6 +25,8 @@ function deletePostSwitch(int $postId):bool {
             } else {
                 $decision = false;
             }
+            // $decision = $postId < 100 ? true : false;
+            // $decision = $postId < 100;
             break;
         default:
             $decision = false;

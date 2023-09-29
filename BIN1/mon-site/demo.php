@@ -54,6 +54,7 @@ function isModeratorValid($role, $postId) {
     } else {
         return null;
     }
+    // return $role === "moderator" && $postId < 100 ? "moderator" : null;
 }
 
 function deletePostMatch(int $postId): bool {
@@ -68,3 +69,11 @@ function deletePostMatch(int $postId): bool {
 }
 
 echo "Post deleted : " . deletePostMatch(100);
+
+
+$i = 0;
+
+echo ++$i . " <= ++i";
+echo $i . " <= i";
+echo $i++ . " <= i++";
+echo $i . " <= i";
