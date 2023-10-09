@@ -68,7 +68,13 @@ function deletePostMatch(int $postId): bool {
     return $decision;
 }
 
-echo "Post deleted : " . deletePostMatch(100);
+echo "<br><br>Post deleted : " . deletePostMatch(100);
+
+$isCompleted = true;
+$task = [
+    "dormier" => true,
+    "manger" => false
+];
 
 
 $i = 0;
