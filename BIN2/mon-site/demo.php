@@ -1,5 +1,8 @@
 <?php
 
+$test = completer;
+echo "****".$test."****";
+
 $var1 = "Hello";
 $var2 = "World";
 function display (string $message): void {
