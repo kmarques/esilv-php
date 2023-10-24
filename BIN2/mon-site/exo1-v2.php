@@ -4,18 +4,18 @@ function printCompleted($status)
 {
     return $status ? 'completed' : 'not completed';
 }
+$tasks = json_decode(file_get_contents("./data.json"), true);
 
-$tasks = [
-    ["title" => "Faire la vaisselle", "status" => true, "author" => "Antoine"],
-    ["title" => "Faire le ménage", "status" => false, "author" => "Hippolyte"],
-    ["title" => "Faire la cuisine", "status" => true, "author" => "Ahmed"],
-    ["title" => "Faire la lessive", "status" => true, "author" => "Antony"],
-    ["title" => "Faire les courses", "status" => true, "author" => "Brian"],
-];
+
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
+    $_POST['status'] = isset($_POST['status']);
+    $tasks[] = $_POST;
+    file_put_contents('./data.json', json_encode($tasks));
+}
 
 if (!empty($tasks)) {
     $isCompleted = isset($_GET['completed']);
-    $filterOwner = $_GET['filterOwner'];
+    $filterOwner = isset($_GET['filterOwner']) ? $_GET['filterOwner'] : "";
 
     $filteredValues = array_filter($tasks, function ($task) use ($isCompleted, $filterOwner) {
         return $task['status'] === $isCompleted && str_starts_with($task['author'], $filterOwner);
@@ -34,8 +34,8 @@ if (!empty($tasks)) {
 <body>
     <h2>Filters</h2>
     <form>
-        <input type="checkbox" name="completed" value="1" <?= $isCompleted ? "checked" : "" ?>>
-        <input type="text" name="filterOwner" value="<?= $filterOwner ?>">
+        <label for="completed">Completed ?</label><input type="checkbox" id="completed" name="completed" value="1" <?= $isCompleted ? "checked" : "" ?>>
+        <label for="filterOwner">FilterOwner ?</label><input type="text" id="filterOwner" name="filterOwner" value="<?= $filterOwner ?>">
         <input type="submit" value="Filter">
     </form>
     <?php if (empty($tasks)) : ?>
@@ -51,5 +51,12 @@ if (!empty($tasks)) {
             </ul>
         <?php endif; ?>
     <?php endif; ?>
+    <h2>Add task</h2>
+    <form method="POST">
+        <label for="title">Title ? </label><input type="text" id="title" name="title">
+        <label for="status">Completed ? </label><input type="checkbox" id="status" name="status">
+        <label for="author">Author ? </label><input type="text" id="author" name="author">
+        <input type="submit" value="Add Task">
+    </form>
 </body>
 </html>
