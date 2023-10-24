@@ -15,9 +15,20 @@ $tasks = json_decode(file_get_contents("./data.json"), true);
 
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
-    $_POST['status'] = isset($_POST['status']);
-    $tasks[] = $_POST;
+    if (isset($_POST['add'])) {
+        $_POST['add']['status'] = isset($_POST['add']['status']);
+        $tasks[] = $_POST['add'];
+    } else {
+        $_POST['edit']['status'] = isset($_POST['edit']['status']);
+        $tasks[$_GET['edit']] = $_POST['edit'];
+    }
     file_put_contents('./data.json', json_encode($tasks));
+} else {
+    if (isset($_GET['delete'])) {
+        unset($tasks[intval($_GET['delete'])]);
+        file_put_contents('./data.json', json_encode($tasks));
+        unset($_GET['delete']);
+    }
 }
 
 if (!empty($tasks)) {
@@ -52,18 +63,31 @@ if (!empty($tasks)) {
             Aucune tâche correspondant aux filtres
         <?php else : ?>
             <ul>
-                <?php foreach($filteredValues as $task) : ?>
-                    <li><?= $task['title'] ?> <?= printCompleted($task["status"])?> <?= $task['author']?></li>
+                <?php foreach($filteredValues as $index => $task) : ?>
+                    <li>
+                        <?= $task['title'] ?> <?= printCompleted($task["status"])?> <?= $task['author']?>
+                        <a href="?<?= http_build_query($_GET); ?>&delete=<?= $index ?>">Delete</a>
+                        <a href="?<?= http_build_query($_GET); ?>&edit=<?= $index ?>">Edit</a>
+                    </li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
     <?php endif; ?>
     <h2>Add task</h2>
     <form method="POST">
-        <label for="title">Title ? </label><input type="text" id="title" name="title">
-        <label for="status">Completed ? </label><input type="checkbox" id="status" name="status">
-        <label for="author">Author ? </label><input type="text" id="author" name="author">
+        <label for="title">Title ? </label><input type="text" id="title" name="add[title]">
+        <label for="status">Completed ? </label><input type="checkbox" id="status" name="add[status]">
+        <label for="author">Author ? </label><input type="text" id="author" name="add[author]">
         <input type="submit" value="Add Task">
     </form>
+    <?php if (isset($_GET['edit'])) :?>
+        <h2>Edit task <?= $_GET['edit'] ?></h2>
+        <form method="POST">
+            <label for="title">Title ? </label><input type="text" id="title" name="edit[title]" value="<?= $tasks[$_GET['edit']]['title'] ?>">
+            <label for="status">Completed ? </label><input type="checkbox" id="status" name="edit[status]" <?= $tasks[$_GET['edit']]['status'] ? "checked" : '' ?>>
+            <label for="author">Author ? </label><input type="text" id="author" name="edit[author]" value="<?= $tasks[$_GET['edit']]['author'] ?>">
+            <input type="submit" value="Edit Task">
+        </form>
+    <?php endif; ?>
 </body>
 </html>
