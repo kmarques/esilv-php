@@ -1,14 +1,17 @@
 <?php
 
 require_once "./lib/polyfill.php";
+require_once "./lib/db.php";
 
 function printCompleted($status)
 {
     return $status ? 'completed' : 'not completed';
 }
-$tasks = json_decode(file_get_contents("./data.json"), true);
+// $tasks = json_decode(file_get_contents("./data.json"), true);
+$stmt = $db->query('SELECT * FROM tasks', PDO::FETCH_ASSOC);
+$tasks = $stmt->fetchAll();
 
-$isCompleted = isset($_GET['completed']);
+$isCompleted = isset($_GET['completed']) ? 1 : 0;
 $filterOwner = isset($_GET['filterOwner']) ? $_GET['filterOwner'] : "";
 
 $filteredValues = array_filter($tasks, function ($task) use ($isCompleted, $filterOwner) {
@@ -19,7 +22,7 @@ $pageTitle = "Tasks";
 
 ?>
 
-<?php require('./includes/header.php'); ?>
+<?php require_once('./includes/header.php'); ?>
 <h2>Filters</h2>
 <form>
     <label for="completed">Completed ?</label><input type="checkbox" id="completed" name="completed" value="1" <?= $isCompleted ? "checked" : "" ?>>
@@ -44,4 +47,4 @@ $pageTitle = "Tasks";
     <?php endif; ?>
 <?php endif; ?>
 <a href="/tasks-add.php">Add task</a>
-<?php require('./includes/footer.php'); ?>
+<?php require_once('./includes/footer.php'); ?>
