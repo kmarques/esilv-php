@@ -11,7 +11,9 @@
                 <li><a href="/contact.html.php">Contact</a></li>
                 <li><a href="/tasks.php">Tasks</a></li>
                 <li><a href="/profile.php">Profil</a></li>
+                <?php if (isset($_SESSION['USER_ID'])) : ?><li><a href="/logout.php">Logout</a></li><?php endif; ?>
             </ul>
+            <?php if (isset($_SESSION['USER_ID'])) : ?><span><?= $USER['email'] ?></span><?php endif; ?>
         </nav>
         <header>
             Super Site

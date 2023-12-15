@@ -1,4 +1,19 @@
 <?php
+require('./includes/checkSession.php');
+
+if ($USER === null) {
+    header('Location: /login.php');
+    exit();
+}
+
+if(!isset($_SESSION['visitorId'])) {
+    $_SESSION['visitorId'] = uniqid();
+    echo "New visitor : " . $_SESSION['visitorId'];
+} else {
+    echo "Welcome back : " . $_SESSION['visitorId'];
+}
+
+
 // MODEL
 require_once('models/tasks.model.php');
 $tasks = getTasks($db);

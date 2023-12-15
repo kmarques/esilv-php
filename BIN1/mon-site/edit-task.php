@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once('models/tasks.model.php');
 
 // CONTROLLER
